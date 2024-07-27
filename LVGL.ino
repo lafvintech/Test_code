@@ -120,13 +120,11 @@ void my_disp_flush( lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *colo
     uint32_t w = ( area->x2 - area->x1 +1  );
     uint32_t h = ( area->y2 - area->y1 +1 );
 
-  tft.pushImage(uint32_t(area->x1), uint32_t(area->y1), w, h, (uint16_t*)color_p);
-    //tft.startWrite();
-    //tft.setAddrWindow( area->x1,area->y1,  w ,h );
-    //tft.pushColors( ( uint16_t * )&color_p->full, w * h, true );
-    
-  
-  //tft.endWrite();
+    tft.startWrite();
+    tft.setAddrWindow( area->x1,area->y1,  w ,h );
+    tft.pushColors( ( uint16_t * )&color_p->full, w * h, true );
+    tft.endWrite();
+ // tft.pushImage(uint32_t(area->x1), uint32_t(area->y1), w, h, (uint16_t*)color_p);
  //for(x= 0;x<w;x++)
  //{
   // for(y=0;y<h;y++)
@@ -168,12 +166,7 @@ void my_touchpad_read( lv_indev_drv_t * indev_driver, lv_indev_data_t * data )
 
 void setup()
 {
-    static lv_disp_draw_buf_t draw_buf;
-    static lv_color_t buf_2_1[screenWidth * 30];
-    static lv_color_t buf_2_2[screenWidth * 30];
-    
     Serial.begin( 115200 ); /*初始化串口*/
-    tft.initDMA();          /*初始化*/
     tft.begin();          /*初始化*/
     tft.setRotation(1); /* 旋转 */
     tft.setTouch(calData);
@@ -199,8 +192,8 @@ void setup()
     //touch_calibrate();//屏幕校准
     tft.setTouch( calData );
 
-    //lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * 10 );
-    lv_disp_draw_buf_init(&draw_buf,buf_2_1,buf_2_2,screenWidth *30);
+    lv_disp_draw_buf_init( &draw_buf, buf, NULL, screenWidth * 10 );
+
     /*初始化显示*/
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init( &disp_drv );
